@@ -5,6 +5,7 @@ using Owin;
 using System.Diagnostics;
 using Owin.Demo.Middleware;
 using Nancy.Owin;
+using System.Web.Http;
 
 //[assembly: OwinStartup(typeof(Owin.Demo.Startup))]
 
@@ -30,10 +31,14 @@ namespace Owin.Demo
                         }
                 });
 
+            var config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();
+            app.UseWebApi(config);
+
             //app.Map("/nancy", mappedApp => { mappedApp.UseNancy(); });
-            app.UseNancy(config =>
+            app.UseNancy(conf =>
                 {
-                    config.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound);
+                    conf.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound);
                 });
 
             app.Use(async (ctx, next) =>
