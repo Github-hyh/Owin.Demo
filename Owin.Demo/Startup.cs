@@ -41,11 +41,11 @@ namespace Owin.Demo
                     conf.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound);
                 });
 
-            app.Use(async (ctx, next) =>
-            {
-                Debug.WriteLine("the next ...");
-                await ctx.Response.WriteAsync("<html><head></head><body><h1>Hello World</h1></body></html>");
-            });
+            //app.Use(async (ctx, next) =>
+            //{
+            //    Debug.WriteLine("the next ...");
+            //    await ctx.Response.WriteAsync("<html><head></head><body><h1>Hello World</h1></body></html>");
+            //});
         }
     }
 }
