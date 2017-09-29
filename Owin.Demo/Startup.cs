@@ -29,6 +29,8 @@ namespace Owin.Demo
                         }
                 });
 
+            app.UseNancy();
+
             app.Use(async (ctx, next) =>
             {
                 Debug.WriteLine("the next ...");
