@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
 using System.Diagnostics;
+using Owin.Demo.Middleware;
 
 //[assembly: OwinStartup(typeof(Owin.Demo.Startup))]
 
@@ -12,12 +13,21 @@ namespace Owin.Demo
     {
         public static void Configuration(IAppBuilder app)
         {
-            app.Use(async (ctx, next) =>
-            {
-                Debug.WriteLine("Incoming request: " + ctx.Request.Path);
-                await next();
-                Debug.WriteLine("Outcoming request: " + ctx.Request.Path);
-            });
+            app.UseDebugMiddleware(new DebugMiddlewareOptions
+                {
+                    OnIncomingRequest = (ctx) =>
+                        {
+                            var watch = new Stopwatch();
+                            watch.Start();
+                            ctx.Environment["DebugStopWatch"] = watch;
+                        },
+                    OnOutcomingRequest = (ctx) =>
+                        {
+                            var watch = (Stopwatch)ctx.Environment["DebugStopWatch"];
+                            watch.Stop();
+                            Debug.WriteLine("Request took: " + watch.ElapsedMilliseconds + " ms");
+                        }
+                });
 
             app.Use(async (ctx, next) =>
             {
