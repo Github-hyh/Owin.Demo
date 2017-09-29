@@ -4,6 +4,7 @@ using Microsoft.Owin;
 using Owin;
 using System.Diagnostics;
 using Owin.Demo.Middleware;
+using Nancy.Owin;
 
 //[assembly: OwinStartup(typeof(Owin.Demo.Startup))]
 
@@ -29,7 +30,11 @@ namespace Owin.Demo
                         }
                 });
 
-            app.UseNancy();
+            //app.Map("/nancy", mappedApp => { mappedApp.UseNancy(); });
+            app.UseNancy(config =>
+                {
+                    config.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound);
+                });
 
             app.Use(async (ctx, next) =>
             {
